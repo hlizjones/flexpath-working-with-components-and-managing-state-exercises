@@ -11,6 +11,25 @@ This will start the Vite development server.
 You can view your app at http://localhost:5173.
 
 
+The project structure should look like this:
+`
+my-react-app/
+├── index.html
+├── package.json
+├── src/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── vite.config.js
+└── node_modules/
+`
+
+You will be creating your React exercise answers inside of the `src` 
+directory.
+
+
+
+
 ### Summary of React Concepts Covered in These Exercises
 
 1. **React Components**:
