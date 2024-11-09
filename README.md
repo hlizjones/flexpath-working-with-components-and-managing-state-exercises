@@ -8,8 +8,7 @@ Then, you can start the Vite development server by running:
 
 This will start the Vite development server. 
 
-You can view your app at http://localhost:5173.
-
+You can view your app at http://localhost:5500.
 
 The project structure should look like this:
 `
@@ -27,7 +26,8 @@ my-react-app/
 You will be creating your React exercise answers inside of the `src` 
 directory.
 
-
+Exercise instructions are in the file named `EXERCISE-INSTRUCTIONS.txt` inside
+of the `my-react-app` directory.
 
 
 ### Summary of React Concepts Covered in These Exercises
