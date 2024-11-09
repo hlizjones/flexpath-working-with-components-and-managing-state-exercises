@@ -1,3 +1,16 @@
+### Running the Vite Frontend App
+
+Navigate inside of `my-react-app` by using the change directory command:
+`cd my-react-app`
+
+Then, you can start the Vite development server by running:
+`npm run dev`
+
+This will start the Vite development server. 
+
+You can view your app at http://localhost:5173.
+
+
 ### Summary of React Concepts Covered in These Exercises
 
 1. **React Components**:
