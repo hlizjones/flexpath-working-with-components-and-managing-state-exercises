@@ -23,11 +23,21 @@ my-react-app/
 └── node_modules/
 `
 
-You will be creating your React exercise answers inside of the `src` 
-directory.
-
 Exercise instructions are in the file named `EXERCISE-INSTRUCTIONS.txt` inside
 of the `my-react-app` directory.
+
+
+For any components you write, please create them inside of `src/components` and
+import them into `App.jsx` when asked.
+
+For any React.Context answers you write, please create them 
+inside of `src/context` and import them into `App.jsx` when asked.
+
+For any Custom Hook answers you write, please create them 
+inside of `src/hooks` and import them into `App.jsx` when asked.
+
+For any Higher Order Component answers you write, please create them 
+inside of `src/hoc` and import them into `App.jsx` when asked.
 
 
 ### Summary of React Concepts Covered in These Exercises
