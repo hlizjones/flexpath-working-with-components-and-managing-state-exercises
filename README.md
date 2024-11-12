@@ -59,38 +59,15 @@ and managing state within those components effectively.
    inside of `src/hoc` and import them into `App.jsx` when asked.
 
 
-
-3. Before you start these exercises, open your VS code terminal,
-   navigate inside of the `exercise/` folder, and run `npm install` in the terminal.
-   This will install all npm packages required for you to complete these
-   exercises.
-4. As you work through the exercises outlined in `EXERCISE-INSTRUCTIONS.txt`, you 
-   will create tests based on the exercise prompt. Each time you create a test,
-   you should run it to ensure your test is behaving as expected.
-
-   There are also some questions that don't require code for an answer. In those
-   cases, save your answers for these questions directly inside of the 
-   `EXERCISE-INSTRUCTIONS.txt` file.
-5. You will run your tests by opening your VS Code terminal, navigating
-   inside of the `exercise/` folder using the change directory `cd` command,
-   and you will run the following command: `npm run test`.
-6. Once you get to exercise 9, feel free to create new `[exercise_xx].test.js`
-   files inside of the `/exercise/tests/` folder to organize your code.
-
-   As long as your file name ends with `.test.js` and its in the `tests/` folder,
-   Jest will be able to find it and run it when you run `npm run test` in your
-   VS code terminal.
-                                     
-
-The solutions for these exercises are in their own Github repo.
-The link to the GitHub repo is inside of `/solution/exercise-solutions/solution-repo.txt`.
-
-Make sure to fork the solution repo, THEN clone it to your local device to run the code.
-
 We have provided you with a video `running-vite-app.mp4` showing you how to 
 run `npm install` for this project, start the app, open the app in your 
 web browser, and then add a simple component to show the app updating in 
 the browser. 
+                                     
+The solutions for these exercises are in their own Github repo.
+The link to the GitHub repo is inside of `/solution/exercise-solutions/solution-repo.txt`.
+
+Make sure to fork the solution repo, THEN clone it to your local device to run the code.
 
 
 &nbsp;
