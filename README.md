@@ -1,81 +1,100 @@
 
 # flexpath-working-with-components-and-managing-state-exercises
 
-## [Getting Started]
-
-- include gifs here
-- Include relevant steps to run exercise files or start the app
-- "Open the file located at exercise-repo-name/whatever in VS Code"
-
-- Also, include instructions on how to open their terminal in 
-
-- WHILE DOING THIS, LOOK OUT FOR ANY POTENTIAL WINDOWS FILE PATH ISSUES in exercises
-
-
 ## Exercise overview
 
-Give quick overview about context of exercises and their intention
+These exercises will help you get better at creating React components
+and managing state within those components effectively.
 
 
-## Specific exercises listed in numbered order
+## Getting Started
 
-Add disclaimer if exercises are stored inside of specific files as comments
 
-Also, for a plain text reference, theres always the `EXERCISE-INSTRUCTIONS` files to pop open
+1. Using Visual Studio Code, open the folder 
+   `flexpath-working-with-components-and-managing-state-exercises` 
+   wherever you saved it on your device. 
+2. Then, navigate inside of the `my-react-app` folder in your VS Code terminal
+   by using the change directory command: `cd my-react-app`
+3. Then, run the command `npm install` to install all the npm dependencies
+   for this app.
+4. We have provided you a pre-built Vite Frontend Development Server application
+   for you to write your React code in. You will learn a little bit more about
+   Vite when you get to your personal project. For now, you don't need to 
+   know a lot about it. It simply builds your React code into a frontend app
+   for you and serves it to a port on your machine so you can access it 
+   with the url `localhost:5500` in your web browser.
+5. You can start the Vite development server by running: `npm run dev` inside
+   of the `my-react-app` folder.
+   Anytime you save a change in your code, Vite will automatically catch it,
+   rebuild your app, and live update it in your browser. In most cases, there 
+   is NO need for you to refresh your web browser to see the changes you made
+   in the app. You can stop the app in the terminal by using the key combo
+   `ctrl + c` (Control key and the 'c' key). This will stop the app. 
+   This app will run at http://localhost:5500. 
+   Start the app, and then paste that url in your web browser. 
+   The text "I'm an App!" should show on the screen.
+6. The exercises for this module are outlined in `EXERCISE-INSTRUCTIONS.txt`.
+   It will ask you to create various components and use different features of
+   React to manage the components state. 
 
-To answer questions that don't require coding, please create a file in the repo named 
-[exercise_number_answer].txt.
+   There are also some questions that don't require code for an answer. In those
+   cases, save your answers for these questions directly inside of the 
+   `EXERCISE-INSTRUCTIONS.txt` file.
+7. If you create a new component then import and render it in `App.jsx`,
+   and it doesn't show up in your browser window, then you should refresh the app.
+   If that doesn't work, right click the page and choose "Inspect" to open
+   your browsers Dev Tools. Then look in the "Console" tab of the dev tools.
+   If there's an issue with your React component or how you imported it,
+   a message will show detailed information about it in the console.
+8. For any components you write, please create them inside of `src/components` and
+   import them into `App.jsx` when asked.
 
-For example, if in one of the exercise repos question 13 just asked a question to explain a programming concept, store your answer inside of a new file named exercise_13_answer.txt.
+   For any React.Context answers you write, please create them 
+   inside of `src/context` and import them into `App.jsx` when asked.
 
-## Testing / Verification
+   For any Custom Hook answers you write, please create them 
+   inside of `src/hooks` and import them into `App.jsx` when asked.
 
-Include relevant details here about where solution files are stored
+   For any Higher Order Component answers you write, please create them 
+   inside of `src/hoc` and import them into `App.jsx` when asked.
+
+
+
+3. Before you start these exercises, open your VS code terminal,
+   navigate inside of the `exercise/` folder, and run `npm install` in the terminal.
+   This will install all npm packages required for you to complete these
+   exercises.
+4. As you work through the exercises outlined in `EXERCISE-INSTRUCTIONS.txt`, you 
+   will create tests based on the exercise prompt. Each time you create a test,
+   you should run it to ensure your test is behaving as expected.
+
+   There are also some questions that don't require code for an answer. In those
+   cases, save your answers for these questions directly inside of the 
+   `EXERCISE-INSTRUCTIONS.txt` file.
+5. You will run your tests by opening your VS Code terminal, navigating
+   inside of the `exercise/` folder using the change directory `cd` command,
+   and you will run the following command: `npm run test`.
+6. Once you get to exercise 9, feel free to create new `[exercise_xx].test.js`
+   files inside of the `/exercise/tests/` folder to organize your code.
+
+   As long as your file name ends with `.test.js` and its in the `tests/` folder,
+   Jest will be able to find it and run it when you run `npm run test` in your
+   VS code terminal.
+                                     
+
+The solutions for these exercises are in their own Github repo.
+The link to the GitHub repo is inside of `/solution/exercise-solutions/solution-repo.txt`.
+
+Make sure to fork the solution repo, THEN clone it to your local device to run the code.
+
+We have provided you with a video `running-vite-app.mp4` showing you how to 
+run `npm install` for this project, start the app, open the app in your 
+web browser, and then add a simple component to show the app updating in 
+the browser. 
+
 
 &nbsp;
 ---
-
-### Running the Vite Frontend App
-
-Navigate inside of `my-react-app` by using the change directory command:
-`cd my-react-app`
-
-Then, you can start the Vite development server by running:
-`npm run dev`
-
-This will start the Vite development server. 
-
-You can view your app at http://localhost:5500.
-
-The project structure should look like this:
-`
-my-react-app/
-├── index.html
-├── package.json
-├── src/
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── vite.config.js
-└── node_modules/
-`
-
-Exercise instructions are in the file named `EXERCISE-INSTRUCTIONS.txt` inside
-of the `my-react-app` directory.
-
-
-For any components you write, please create them inside of `src/components` and
-import them into `App.jsx` when asked.
-
-For any React.Context answers you write, please create them 
-inside of `src/context` and import them into `App.jsx` when asked.
-
-For any Custom Hook answers you write, please create them 
-inside of `src/hooks` and import them into `App.jsx` when asked.
-
-For any Higher Order Component answers you write, please create them 
-inside of `src/hoc` and import them into `App.jsx` when asked.
-
 
 ### Summary of React Concepts Covered in These Exercises
 
