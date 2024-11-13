@@ -63,6 +63,9 @@ We have provided you with a video `running-vite-app.mp4` showing you how to
 run `npm install` for this project, start the app, open the app in your 
 web browser, and then add a simple component to show the app updating in 
 the browser. 
+
+VIDEO DISCLAIMER - You will need to clone the repo to your local device before
+you can watch the .mp4 file since GitHub does not support watching it from here.
                                      
 The solutions for these exercises are in their own Github repo.
 The link to the GitHub repo is inside of `/solution/exercise-solutions/solution-repo.txt`.
