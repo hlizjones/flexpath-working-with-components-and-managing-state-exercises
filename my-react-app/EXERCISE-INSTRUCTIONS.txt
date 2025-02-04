@@ -39,6 +39,9 @@ Exercise 5: Handling State Changes
 Description: 
 
 Explain how state changes in the `Counter` component cause re-rendering.
+React rerenders whenever a state is changed. the onClick EventHandler calls 
+the setCount function which changes the state which in turn makes the 
+component Counter rerender. 
 
 
 
@@ -57,7 +60,11 @@ Exercise 7: Understanding React Context
 Description: 
 
 Discuss the benefits and drawbacks of using React `Context`.
-
+Context can reduce the volume of code, is a good tool when your 
+code has deeply nested component trees, and is makes code easier 
+to maintain. However, it also uses more complex JavaScript, tracking
+which components share which context can be difficult, and bugs are
+more likely to occur.
 
 
 Exercise 8: Using useEffect Hook
@@ -75,6 +82,9 @@ Description:
 
 Explain how `useEffect` manages the lifecycle of functional components.
 
+useEffect has a function that executes upon the rerender or upon specified despendencies.
+This lets you perform actions in components that you can control.
+
 
 
 Exercise 10: Creating a Higher-Order Component (HOC)
@@ -91,6 +101,9 @@ Exercise 11: Benefits and Limitations of HOCs
 Description: 
 
 Discuss the use cases and limitations of Higher-Order Components.
+  HOCs can reduce volume of code and have been around for a while 
+  so lots of existing code uses HOCs. However the JavaScript for HOCs 
+  is complex, and HOCs can lead to prop collisions.
 
 
 
@@ -108,6 +121,10 @@ Description:
 
 Explain how to use React DevTools to inspect components and their state.
 
+The Components tab shows the components tree. You can click on each component to see more details, for 
+example what parent component rendered it and any props passed to it. You can also 
+use the Components tab to inspect the source code and the DOM. Some other features include 
+filtering components and highlighting components that are rerendered.  
 
 
 Exercise 14: Diagnosing Performance Issues
@@ -116,6 +133,11 @@ Description:
 
 Explain how to use the React Profiler to identify and optimize slow components.
 
+The Profiler provides a flamegraph which is a breakdown of the components that rendered from the root to its
+furthest child. THe root will span the entire length because it is always running. Basically, the
+flamegraph shows how long each component took to render. If a component is grey, it has not been rendered.
+The Profiler tab also has a tool to record each component when it rendered to receive more information,  primarily
+why that particular component rendered.
 
 
 Exercise 15: Integrating Next.js
@@ -124,6 +146,8 @@ Description:
 
 Briefly explain how to integrate Next.js for server-side rendering.
 
+To integrate Next.js, you can  install it which will make it a dependency 
+in the package.json. You can configure Next.js in package.json and next.config.js.
 
 
 Exercise 16: Code Splitting with React.lazy

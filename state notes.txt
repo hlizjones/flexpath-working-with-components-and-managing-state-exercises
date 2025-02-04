@@ -1,0 +1,390 @@
+State
+    App data that may change
+    8 ways to handle state:
+        URL: tracks settings and where user is in the app (current item being viewed, filters, sorting, pagination) -> system of record -> can share location w/ others (deep linking)
+        Webs Storage: persists states btw reloads (cookies, localStorage,  IndexedDB) -> tied to a single browser, can't load in other browser -> no sensitive data -> uses cases: partially completed forms, shopping carts
+        Local State: when one comp needs it (toggles, form settings)
+        Lifted state: lift state to common parent -> declare in parent comp and pass state down via props -> consistency and avoids duplication
+        Derived state: from existing state/props can call state on render (ex: call .lengtj on an arr in render) -> simplified bugs and avoids sync bugs
+        Refs: 1. can hold DOM element reference -> manage uncontrolled comps & interfacing w/ non-react libs
+              2. state that isn't displayed (undo/redo or timers)
+        Context: globally/broadly used state and funcs -> avoid prop drilling (ex: logged in user, theme, internationalization settings)
+        Third Party State: redux, modux, recoil -> remote state lib (hold state from api calls)
+
+Local State
+    useState: App3
+    
+    State Hooks
+        Rules:
+        1. Hooks are for func -> cannot be used in classes
+        2. Names start with "use
+        3.  Can only call at top level -> can't be in funcs, loops, or conditionals
+            place condition inside of Hooks
+
+    Synthetic events -> same as EventHandlers but camelcased 
+
+    When does react rerender:
+        state change
+        prop change
+        parent render
+        context change
+
+        state is necessary bc react only rerenders when state changes not 
+
+    useEffect Hook
+        fetch data
+        runs after each render but can config to run at dif times (ie only after first render)
+        declared in comp
+        takes 2 args: func tha will run each time useEffect runs, list of reasons the useEffect should rerun aka despendencies arr
+            const [products, setProducts] = useState([]) //state to hold getProducts return value
+            
+            useEffect(()=> {
+                getProducts("shoes) //call getProducts after each render
+                .then((response) => setProducts(reponse)); //store result of getProducts in setProducts state
+            }, [//2 arg any state or props listed here will cause useEffect to run when they change -> empty means run only once])
+
+    4 Ways to Handle API Calls:
+        1. Inline: call fetch, axios, in your comp -> hsrd to maintain cinsistently, not reusable
+        2. Centralized function: make separate func to call fetch/axios in files and import them and call in dif comp files -> reusable
+        3. create and call custom Hook
+        4. call library that does this for you
+
+    Error boundary
+        in development error stack display by default -> close out to see message user would see in production
+        do no catch event handlers, aync code, error boundary itself, server-side
+        can use state to handle async errors
+            const [error, setError] = useState(null)
+            useEffect(()=> {
+                getProducts("shoes) 
+                .then((response) => setProducts(reponse));
+                .catch((e)=> setError(e))
+            }, [])
+
+            if (error) throw error //if error is set w/ state, that error will now be thrown to ErrorBoundary in a form it can use
+
+    Loading State
+        const [loading, setLoading] = useState(true) //set to truw bc when page first loads it will be loading
+        const [error, setError] = useState(null)
+            useEffect(()=> {
+                getProducts("shoes) 
+                .then((response) => setProducts(reponse));
+                .catch((e)=> setError(e))
+                .finally(() => setLoading(false)); //either after a response or an error, loading state will end
+            }, [])
+
+        can use to render a spinner 
+            if (loading) return <Spinner/>;
+
+    Async/Await w/ useEffect
+        need to nest async func inside useEffect
+                
+            useEffect(()=> {
+                async function init() {
+                try { const response = await getProducts("shoes) 
+                setProducts(reponse);
+                } catch (e) {
+                setError(e)
+                } finally {
+                    setLoading(false)
+                }
+                }
+                init()
+            }, [])
+
+    Custom Hook
+        useFetch.js3
+
+Route State
+    store state in URL
+    use React Router
+        mosts popular router for react
+        not part of react -> separate open source project
+        fast, clarative client side routing
+
+    Config in Apps entry point
+        index4
+
+    Creating App Layout and Declaring Routes
+        App4
+        Product from previous notes was moved to Products4
+    
+    Placeholders
+        aka URL parameters
+        The URL itself is not explicitly defined in the code you provided. Instead, it is dynamically created by the user’s interaction with the app, and React Router handles it based on the route you've set up.
+            There is not a file for shoes but just the file for products and the url to access that products page changes based on what the user is requesting
+            Can fetch/call the API to get products bage or product details based on the url the user entered -> Details4
+
+        Use a colon (: ) before the segment in the path prop of a Route component to declare it as a placeholder
+             <Route path="/:category" element={<Products />} />
+                category is a placeholder
+        Access value of placeholder with useParams Hook
+            export default function Products() {
+            const [size, setSize] = useState("");
+            const { category } = useParams();
+            }
+
+        404 Pages
+            when url is invalid
+            set up PageNotFound file
+            Products4
+
+    Client Side Navigation
+        Header4
+        Products4
+
+Shared, Derived, and Immutable State
+
+    Where to delcare state
+        sign it's in the wrong spot -> hard to consume and share
+        rule of thumb -> start local and lift to parent when needed to broaden access
+        principle of least priviledge: every module must be able to access only the info and resoucres that are necesaary for its legitimate prupose
+            ideally each react comp only has access to the data/functions it needs
+            keep as local as possible
+
+            start local guide:
+                1. declare state in comp that needs it
+                2. child comp needs the state? pass down via props
+                3. non-child comps need it? lift meaning declare state in common parent
+                4. passing props getting annoying? context, redux, etc
+
+    Lifting:
+        declare state in common parent comp of all comps that need access to that comp
+        state -> what data needs to be stored in state that each child comps needs?
+        App5, Detail5, Cart5
+
+    Updating State w/ Async
+        need to update state using existing state
+            so we need func to set state so ensure we can ref existing state
+        react setstate is async
+            react batches setState calls for performance -> reduced rerenders
+                if state is set mult times in a short time period, react might only rerender once
+            react can prioritize setState calls
+                (ie typing into search is prioritized above updating the results)
+        
+        Example: storing a counter in state
+        const [count, setCount] = useState(0);
+
+        // Avoid since unreliable
+        setCount(count +1); //ref count inside setter is bad bc count could be out of date
+
+        //Prefer this - Use function to reference existing state
+        setCount((count) => count + 1);
+
+    Immutable States
+        fast comparison, pure funcs, simpler undo/redo, less bugs
+
+        state object: would be difficult to check every property so simpler to not change (keep immutable)
+
+        user = {
+        name: 'Cory House'
+        role: 'author'
+        city: 'Kansas City'
+        state: 'Kansas'
+        country: 'USA'
+        isFunny: 'Rarely'
+        smellsFunny: 'Often'
+        }
+
+        Value equality -> check is each property has the same value btw objects
+        Reference equality -> check if both reference the same spot in memeory
+            if state is immutable, refernce check suffices to ssee if state has changed
+
+        To change states, return a new value for the new state
+            state = {
+            name: 'Cory House'
+            role: 'author'
+            }
+
+            return state = {
+            name: 'Cory House'
+            role: 'admin'
+            }
+
+        Handling Immutable data
+
+            Shallow Copies: nest object still ref same point in memory as before
+                Object.assign({}, state, {role: admin}) //create an empty object that is copy of state but will role changes to admin
+                const newState = {...state, role:admin} //values on right override values in spread syntax on the left
+
+            const user = {
+            name: 'Cory',
+            address: {
+            state: 'California'
+            }
+            }
+
+            // Watch out, it didn't clone the nested address object!
+            const userCopy = { ... user } ;
+
+            // This clones the nested address object too
+            const userCopy = { ... user, address: { ... user.address}}; // change value for nested objects to avoid shallow copy
+
+        Avoid Nested Objects:
+            const user = {
+            name: "Cory",
+            email: "cory@reactjsconsulting.com",
+            address: {
+            city: "Chicago"
+            }
+            }
+
+            // Avoid
+            const [user, setUser] = useState(user);
+
+            // Prefer: two sep pieces of state -> address doesn't live inside user state. It is derived from user, but they are independent
+            const [user, setUser] = useState(user);
+            const [address, setAddress] = useState(user.address);
+
+            becomes:
+            
+            user = {
+            name: "Cory",
+            email: "cory@reactjsconsulting.com"
+            };
+
+            address = {
+            city: "Chicago"
+            };
+
+            can merge back together if needed
+
+            AVOID BLINDLY DEEP CLONING
+                expensize -> slows app
+                wateful,
+                unnecessary rerenders
+
+        Arrays:
+            Avoid: push, pop, reverse -> change og arr
+            Prefer: map, filtre, reduce, concat, spread -> return new arr
+
+    localStorage
+        pros: local, simple, fast, works offline
+        cons: limited storage, security risk on public machines, tied to sinle browsers, come apis to do this can lock browser temporarily
+                
+        App5
+
+Form Validation and State
+
+    Checkout6
+
+    Validation decisions:
+        1. when to display errors (by field? at top? both?)
+        2. when to display errors (onSubmit? onBlur (when user leaves an input field)? onChange? two of these? All three?)
+        3. when to disable submit (until clean? submitting? never?)
+        4. when to revalidate (onSubmit? onBlur? onChange? two of these? All three?)
+
+    State
+        touched fields -> state touches
+        form is submitted -> state status
+        isSubmitting -> state status
+        isValid -> derived state
+        errors -> derived state
+        dirty aka form changes but not submitted -> derived state
+
+    use enum to avoid track mult states for the same thing
+
+        // Using separate state to track the form's status: (risk of out-of-sync)
+        const [submitting, setSubmitting] = useState(false); // Submit in progress
+        const [submitted, setSubmitted] = useState(false); // Submitted with errors
+        const [completed, setCompleted] = useState(false); // Completed
+
+        // Using a single status "enum" instead
+        const STATUS = {
+        IDLE: "IDLE",
+        SUBMITTING: "SUBMITTING"
+        SUBMITTED: "SUBMITTED",
+        COMPLETED: "COMPLETED",
+        }
+
+        const [status, setStatus] = useState(STATUS.IDLE);
+        
+        enum = enumeration = list of options
+        app can only been in one status at a time
+
+    Enums vs Finite Machines:
+        Enum:
+            does logic have discrete states? 
+            good use for sep booleans but only one can be true at a time
+            set of predefined values
+        finite machine:
+            only one state can be active at the same time
+            the machine transitions from one state to another
+                ex: only lets it move from idle to completed to submitting to submitted instead of any other order
+        dif is machine track how and when states change
+
+Refs
+    ref to html element
+    store a value that's stable btw rerenders
+        can mutate refs value directly
+        don't cause a re-render when they change -> used for values not rendered
+
+        import React, { useRef } from 'React';
+
+        function TextInputWithFocusButton() {
+        const inputEl = useRef(null);
+        const onButtonClick = () => inputEl.current.focus(); //can access underlying DOM element w/ current
+
+        return (
+        <>
+        <input ref={inputEl} type="text" /> //ref prop
+        <button onClick={onButtonClick}>Focus the input</button>
+        < />
+        )
+        };
+
+    when to use:
+        dom element ref
+        state that doesn't change/ isn't rendered"
+        instance variables in func comps
+
+        DetailRefs
+            convert size select to be uncontrolled input
+
+    Avoid Setting State on Unmounted Comp:
+        if you leave a page before an api call is completed, state is set on an unmounted comp
+            can use ref to chck comp is mounted before setting state
+                useFetch7
+
+    Storing a previous value
+        useFetchAll7
+
+useReducer
+    manages state via pure func
+    extract logic outside comp -> reusable
+    cartReducer8, App8, Cart8, Detail8, Checkout8
+
+        const initialState = { count: 0 }
+
+        function reducer(state, action) { //declare func that manages state separate that comp -> accepts state and action
+        switch (action. type) {
+        case 'increment':
+        return { count: state. count + 1 }
+        case 'decrement':
+        return { count: state. count - 1 } //return becomes new state
+        default:
+        throw new Error()
+        }
+        }
+
+
+        function Counter() {
+        const [state, dispatch] = useReducer(reducer, initialState) //reducer is passed to useReducer hook which returns initial state and dispatch func 
+
+        return (
+
+        Count: {state.count}
+        <button onClick={() => dispatch({ type: 'decrement' })}> -< /button> //dispatch func used to dispatch actions -> actions are how we change state
+        <button onClick={() => dispatch({ type: 'increment' }) }>+</button>
+        </>
+        )
+        }
+
+Context
+    Context vs Redux -> Why Complex? Module 9
+
+    cartContext9, index9
+
+    can centralize context in one file
+
+    can create customHook for consuming context that you can apply to each comp that should be consuming the context
+

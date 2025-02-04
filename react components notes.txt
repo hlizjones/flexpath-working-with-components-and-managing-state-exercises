@@ -1,0 +1,451 @@
+Comp: indepedent vits of code serving 1 purpose that come together to form an app
+    in react, their purpose is to render html ot other comps
+    react launches 1 root comp w/ child comps
+
+    Each comp has its one js file
+
+    BEFORE
+        ToDoItem.js
+            function ToDoItem() {
+                const text = "Wash clothes";
+                const completed= false; //CSS strikesthro when completed class is true
+                return (
+                    <div className={completed ? "completed : ""}>{text}</div>
+                );
+            }
+
+    AFTER: func comp receive prarameters called "prop"
+        ToDoItem.js
+            function ToDoItem({text,completed}) { //will pass in "Wash clothes" and false as args 
+            return (
+                    <div className={completed ? "completed : ""}>{text}</div>
+                );
+            } //referred to as pure func componenent: guaranteed to render the same output
+
+Parenting Comp passing to Child Comp
+    ToDoltem.js
+
+    export default function Index () { //parent Index rendering a child ToDoItem
+    const toDoItem = {text="Wash clothes" completed=false
+    important=true}; //must reference each attribute being passed or it will be undefined
+    return (<ToDoItem {...toDoItem}/>);
+    }
+
+    function ToDoItem({ text, completed, important }) {
+    return (<div className={completed ? "completed" : ""} >
+    {important ? "*" : "" } {text}</div>);
+    }
+
+    Using props instead of destructered syntax ({ text, completed, important }) can expose secret data
+
+State
+    Comp changes what they render when things happen
+    Local Comp State: changeable value w/ method that changes it
+        Events fired from browser can change
+
+    import {useState} from "react"
+
+    function ToDoItem({ text, completed, important }) {
+    const //useState API call returns new arr [textState //new state, setTextState // setter method we call to change] = useState(text //initial value to set new state to); //replaces text with one that changes
+    useEffect(() => {
+        setTextState (`${test} ${newDate().toLocaleTimeString()}`) //func to exist after page renders 
+        }, []);//dependency arr, empty only renders when page first renders
+    return (
+    <div className={completed ? "completed" : ""}>
+    {important ? "*" : ""} {textState //replace text w/ textState so changing value renders;calling setter method, it causes re-render and comp renders new html based on current state value passed to setter}
+    </div>
+
+    ):
+
+    }
+
+    can use listeners to trigger state changes
+    onClick={ () => {
+        setCompletedState(!completedState);
+    }}
+
+Next.js Toolchain
+    connects React to what is needed to debug and publish web apps
+    install node.js: npx create-next-app@latest
+        app router set to no -> implies page router(browser -> can use event handlers), yes implies app router(server)
+    will be dependency in package.json and config scripts to run next
+        {
+            dev: next dev //type npm run dev -> starts app in browser
+            build: next build //creating production builds
+            start: next start //creating production builds
+            lint: next lint //checks quality of code
+        }
+
+    next.config.js
+
+        /*+ @type {import('mext' ).NextConfig} */
+        Const nextConfig = {
+        reactStrictMode: true,
+        swcMinify: true,
+
+        rodule.exports = nextConfig;
+        }
+
+    JS files at root of /pages folder are standalone default exported comps rendered as the root element when browser is on the localhost:3000/NameofFileThatWillbeRootElement
+        index is default for just localhost:3000
+
+Local State vs Global State
+    all comp can store their own local comp state
+    props can be passed from parent to child comps
+        example: changing theme from light to dark would start in app and propogate to all child comp throughout app
+        example: func to change theme can be passed as prop from parent app to child header to child themetoggle 
+        because the click event is located in the themetoggle comp but it needs to affect app so app \
+        can pass change to all child comps
+    
+Passing State btw comps
+    pass as props: pass data and function as props
+    react context: access data anywhere in comp hirarchy; attributes don't need to be explicitedly mentioned like w/ props
+    higher order comps (HOC): new comp that can be shared accross app
+    
+    props:
+        simplest way to pass
+        adds complexities when prop drilling 
+
+        use spread operator to eliminate repetative code (mentionaing every attribute -> secret code can sneak in)
+            <Header {...props} />
+
+
+    react context api:
+        designed to share data from comp to all descendant comps
+        acts as global data you can share from any level of comp hierarchy -> all children will have that context
+        can overlap
+        context can pick up data from another context above it
+
+        in parent directory: 
+        import {createContext} from "react"
+        export const ThemeContext = createContext({});
+        const App = () => {
+            return ( <ThemeContext.Provider value={{darkTheme, toggleTheme}}>)
+        }
+
+        in child directory:
+        import {createContext} from "react"
+        import {ThemeContext} from "../../App";
+        const Header = () => {
+            const { darkTheme, toggleTheme } = useContext(ThemeContext)
+        }
+
+    Can use context to manage state
+        can have a separate comp to manage state in relation to this context
+
+        import { useState, createContext } from "react";
+
+        export const ThemeContext = createContext({});
+
+        export const ThemeProvider = ({children}) => {
+        const [darkTheme, setDarkTheme] = useState (false);
+        const toggleTheme = () => {
+        setDarkTheme(!darkThene);
+        }
+        return (
+        <ThemeContext.Provider //use provide object to set context in ThemeProvider comp -> return <ThemeProvider> in App so additional logic is not in App but in its own directory
+        value={{ darkTheme, toggleTheme }}
+
+        {children}
+        </TheneContext.Provider>
+        )
+        }
+
+        seperates App comp from themeProvider comp so it comp is serving one purpose
+
+    Promote Context Creation to Where it is used
+        prevents comp from rendering and not using Context
+            useContext(ThemeContext) is being called before the ThemeProvider is fully rendered with the updated context value. This could cause useContext to use the default value from createContext, not the value passed in the ThemeProvider.
+        create a pass-through comp -> basically an inner comp that will run all code and then the outer comp just displays the code run
+
+        const Inner = ({children}) {
+        const { darkTheme } = useContext(ThemeContext);
+        const layoutVersion = "Layout Version 2.0";
+        return (
+        <div className="container" data-theme=(darkTheme ? "dark" : "light")>
+        <Header layoutVersion=(layoutVersion) />
+        {children}
+        <Footer />
+        </div>
+        )
+        }
+
+        comst Layout = (props) => {
+        return (
+        <ThemeProvider>
+        <Inner { ... props} />
+        </ThemeProvider>
+        )
+        }
+
+Higher Order Comp (HOC)
+    react comp that take in another comp and returns a copy of the passed in comp
+    enhance passed in comp w/ invisible properties
+    work by enhancing any react comp such that new values can be passed in as incoming props
+        figures out new values and make them available as incoming props
+    reusable comp to inject props into existing comp
+
+        import { useState } from 'react ;
+
+        comst App = ({darkTheme, toggleTheme} ) => {
+        return (
+        <div className="container" data-theme={darkThere ? "dark" : "Light"}
+        onClick={toggleTheme}>
+        My Site
+        </div>
+        );
+        }
+
+        const withTheme = (Component) => {
+        function Func(props) {
+        const [darkThene, setDarkTheme] = useState(true);
+        return (
+        <Component { ... props}
+        darkTheme={darkThene}
+        toggleTheme={() => setDarkTheme (!darkTheme)} />
+        )
+        }
+        return Func; //must create named func and return that named func -> can't be anonymous -> func name is uppercase for lint
+        }:
+
+        export default withTheme(App):
+
+    Can combine higher order w/ context
+        allows both comps with HOC and comps w/o to all be affected by same theme
+
+        import { useContext } from 'react':
+        import { ThemeContext } from " .. / .. /contexts/ThemeContext":
+
+        export const withTheme = (Component) {
+        function Func(props) {
+        const { darkTheme, toggleTheme } = useContext(ThemeContext);
+        return (
+        <Component
+        { ... props}
+        darkTheme={darkThene}
+        toggleTheme={toggleTheme}
+        />
+        )
+        }
+        return Func;
+        }
+
+Comparison
+    props:
+        simple
+        easy to read
+        simple comp hierarchy not too nested
+        hard to update & easy to make mistakes in complex hierarchy
+    context:
+        reduces volume of code
+        good for deep comp trees
+        easy to maintain
+        more complex js 
+        tracking what comps share what context is hard
+        can be buggy
+    HOC:
+        reduces volume of code
+        been around for a while so lots of existing code uses
+        complex js 
+        can lead to prop collisions
+
+React Dev Tool:
+    Comps:
+        shows nested comps on each page
+            click for more details -> can see what comp rendered it and propos passed incoming
+            can also see source code
+            DOM inspector
+            debuuger icon logs selected comp to console
+            settings gear can filter comps
+            props editor
+            highlight updates when comps rerender
+
+    Profiler:
+        reload and start profiling and then stop to get flame graph
+        flamegraph: breakdown of comps that rendered from root to furthiest child   root spans entire length bc it's always running
+        tells how long it took to render each comp
+        not grey = rerendered
+        can "record why each comp rendered" 
+
+            const ToDo = ({
+            todoItem,
+            handleToggleCompleted,
+            handleDelete,
+            handleEdit,
+            idUpdating,
+            }) =>
+            console. log(`ToDo: ${todoItem. id}: ${todoItem. todoText}' ); //log message at top of comp helps validate comp was rendered; might print twice bc react renders twice to prevent bugs
+            return
+            <div
+
+when a method is passed to a comp as an attribute a copy of that method is created and react doesn't know its the same as mbefore so it forces a rerender
+
+
+useDebugValue Hook:
+    only works in custom hooks
+    expose data in custom react hooks
+    helps examine code in dev tools
+        state values are not tracked by name in React Dev Tool -> useDebugValue
+
+        import { useState, useDebugValue } from "react";
+
+        export default function useTheme() {
+        const [darkTheme, setDarkTheme] = useState(false);
+        const toggleTheme = () => {
+        setDarkTheme ( !darkTheme);
+        };
+        useDebugValue(
+        theme: ${darkTheme ? "dark" : "light"}'
+        );
+        return {
+        darkTheme, toggleTheme,
+        }
+        }
+
+    Advanced use of useDebugValue:
+        function myCustomHook() {
+        const [textState, setTextState] = useState("");
+
+        useDebugValue( //pass func to useDebugValue
+        '${textState}',
+        (val) => {
+        if (val === "...") {
+        return "Result ... "; //return is what is displayed in react dev tools comp
+        } else {
+        return "Other Result ... "; //return is what is displayed in react dev tools comp
+        }
+        });
+        return <div>{textState}</div>
+        } 
+
+
+Error Boundaries
+    copy and paste class from react error boundary docs
+        add import react
+        remove loggingoferrors if there is no service to log to
+        export at end of file
+
+    wrap comp in error boundary
+    const ToDo = (props) => { //pass props in
+    return (
+    <ErrorBoundary>
+    <Inner {...props} /> //wraps comp Inner in ErrorBoundary
+    </ErrorBoundary>
+    )
+    }
+
+    export default ToDo;
+
+    Improving react error boundary to be consistent w/ Using
+
+        const ToDo = (props) => {
+            return
+            <ErrorBoundary
+            errorUI={<ToDErrorBoundary {...props}>}> //new comp w/ props in ToDO
+            <Inner { ... props} />
+            </ErrorBoundary>
+        }
+
+        define logic for new comp 
+
+        const debug = false;
+
+        const ToDoErrorBoundary = (props) => {
+        return ( <div className="single-task text-bg-danger"> //class in css handles UI
+        {debug ? (
+        <b>ERROR PROCESSING ToDo: {JSON.stringify(props)}</b> //debug for programmer view w/ details about props passed to ToDo
+        ) : (
+        <b>Problem displaying message/b> //message for user 
+        )
+        }
+        </div>
+        )
+        }
+
+        add logic to ErrorBoundary class for errorUI
+
+        render() {
+        if (this. state. hasError)
+        // You can render any custom fallback UI
+        if (this.props.errorUI) 
+        return <h1>Something went wrong .< /h1>;
+        }
+
+    componentDidCatch in ErrorBoundary class can be used to send a message to service
+
+
+Over rendering
+    React API provides call to reduce over rendering
+        React.memo is most used
+            solves problem of child comp is called my parent comp which cuases child to rerender even if receiving props don't change
+    
+        const memoizedcompt = react.memor(otiginalcomp)
+            memoized -> caches or remembers the return based on the passed in props (shallow compare -> only compared first level of props)
+
+        
+        import { memo } from "react";
+
+            function TodoItemText({ important, todoText }) {
+            return (
+
+            {important ? (
+            <span className="badge warning-bg">
+            <i className="fa fa-exclamation-circle"></i>
+            </span>
+            ) : null}
+            {todoText}
+            </>
+            )
+            }
+
+            export default memo(TodoItemText);
+
+    when func is passed as an attrtibute, a new copy of func is created each time comp is rendered
+        const memoizedComponent = React.memo(
+        originalComponent,
+        (prevProps, nextProps) => { //second parameyter than takes in original and new props and uses logic to figure out if comp should rerender
+        return prevProps. todoItem. important != nextProps. todoItem. important | |
+        prevProps. todoItem. itemText != nextProps. todoItem. itemText;
+        }
+        );
+
+useDeferredValue
+    defer state change of value so other values can update first
+
+        function App() {
+        const [search, setSearch] = useState("");
+        const deferredSearch = useDeferredValue(search //value you want to defer);
+
+        const [todoList, setTodoList] = useState([
+        "clean dog","eat lunch","wash clothes"," ... "]);
+
+        return (
+        <div>
+        <input value={search}
+        onChange={(e) => setSearch(e.target.value) } />
+        <ShowTodoList list={todoList} search={deferredSearch} />
+        </div>
+        );
+        }
+
+useTransitions
+    gives more control than useDeferredValue; can be more explicit in lowering the priority of state and also gives a boolean to let us know when higher priority states are done changing
+    update the state without blocking the UI
+
+        function App() {
+        const [search, setSearch] = useState("");
+        const [searchHighPriority, setSearchHighPriority] = useState("")
+        const [isPending //status flag, indicates if all states in comp are completed, startTransition] = useTransition();
+        const [todoList, setTodoList] = useState([
+        "clean dog", "eat lunch", "wash clothes", " ... "]);
+
+        return (
+        <div>
+        <input value={searchHighPriority} onChange={(e) => {
+            setSearchHighPriority(e.target.value);
+        startTransition (() => setSearch(e.target.value))} //startTransitions says this is less urgent so do it when the main thred has room so it won't block higher priority funcs or the UI
+        } />
+        <ShowTodoList todoList={todoList} deferredSearch={search} />
+        </div>
+        ):
+        }
